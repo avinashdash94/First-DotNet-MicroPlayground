@@ -1,3 +1,5 @@
+using AutoMapper;
+using Mango.Services.CouponAPI;
 using Mango.Services.CouponAPI.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+//Register the mapping class for the application between the classes like Coupon and CouponDto
+IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+builder.Services.AddSingleton(mapper); //this line tells how it should inject the automapper in the application
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); //this line is used to inject the automapper in the application
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
