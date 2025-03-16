@@ -28,5 +28,18 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
+ApplyMigration();
 app.Run();
+
+//Bellow method is used to automatically apply the migration to the database if any migration is pending. In this way, we don't need to run the update-database command manually.
+void ApplyMigration()
+{
+    using (var scop = app.Services.CreateScope())
+    {
+        var _db = scop.ServiceProvider.GetRequiredService<AppDbContext>();
+        if(_db.Database.GetPendingMigrations().Count() > 0)
+        {
+            _db.Database.Migrate();
+        }          
+     }
+}
