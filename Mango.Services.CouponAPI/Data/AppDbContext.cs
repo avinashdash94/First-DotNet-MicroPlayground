@@ -19,7 +19,7 @@ namespace Mango.Services.CouponAPI.Data
             {
                 CouponId = 1,
                 CouponCode = "10OFF",
-                CouponAmount = 10,
+				DiscountAmount = 10,
                 MinAmount = 20
             });
 
@@ -27,7 +27,7 @@ namespace Mango.Services.CouponAPI.Data
             {
                 CouponId = 2,
                 CouponCode = "20OFF",
-                CouponAmount = 20,
+				DiscountAmount = 20,
                 MinAmount = 40
             });
         }
