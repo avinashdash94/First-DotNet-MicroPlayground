@@ -1,4 +1,6 @@
 using Mango.Service.AuthAPI.Models;
+using Mango.Service.AuthAPI.Service;
+using Mango.Service.AuthAPI.Service.IService;
 using Mango.Services.AuthAPI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +14,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions")); //this line is used to configure the JWT options from the appsettings.json file and to bind the JWT options to the JwtOptions class. 
+
 //Below line is used to register the identity service in the application with the user and role for that we  we use default IdentityUser, IdentityRole. This line is used to add the identity service to the application.
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>() // This line indicates that we are using the identity data in the database int AppDbContext class.
     .AddDefaultTokenProviders(); //this line is used to add the default token providers to the application
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IAuthService, AuthService>(); //this line is used to register the AuthService in the application. AuthService is the class that implements the IAuthService interface. This line is used to add the AuthService to the dependency injection container. In this way, we can use the AuthService in the controllers and other classes by injecting it in the constructor.
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
