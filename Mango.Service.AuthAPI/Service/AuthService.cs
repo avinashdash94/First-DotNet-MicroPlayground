@@ -12,16 +12,41 @@ namespace Mango.Service.AuthAPI.Service
         //UserManager is used to manage user accounts, including creating, deleting, and updating user information. ApplicationUser is the custom user class that extends IdentityUser.
         public readonly UserManager<ApplicationUser> _userManager; 
         public readonly RoleManager<IdentityRole> _roleManager; //RoleManager<IdentityRole> handels the roles in the application by using inbuild function of Identity.
+        public readonly IJwtTokenGenerator _jwtTokenGenerator; //this is used to generate JWT token for the user after login. This is injected in the constructor of this class.
         public AuthService(AppDbContext db, 
-            UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager) // these helper method injected automaticaly no need extra configuration.
+            UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, // these helper method injected automaticaly no need extra configuration.
+            IJwtTokenGenerator jwtTokenGenerator) 
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
-        public Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
+        public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
-            throw new NotImplementedException();
+            var user = _db.ApplicationUsers.FirstOrDefault(u=> u.UserName.ToLower() == loginRequestDto.UserName.ToLower());
+            bool isvalid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+            if (user == null|| isvalid == false) {
+                return new LoginResponseDto() { User = null, Token = "" };
+            }
+
+            //if user  was found, Generate JWT token
+            var token = _jwtTokenGenerator.GenerateToken(user);
+            UserDto userDto = new()
+            {
+                Email = user.Email,
+                ID = user.Id,
+                Name = user.Name,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            LoginResponseDto loginResponseDto = new LoginResponseDto()
+            {
+                User = userDto,
+                Token = token
+            };
+
+            return loginResponseDto;
         }
 
         public async Task<string> Register(RegistrationRequestDto registrationRequestDto)

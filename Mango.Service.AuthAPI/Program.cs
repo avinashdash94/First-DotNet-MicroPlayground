@@ -24,6 +24,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IAuthService, AuthService>(); //this line is used to register the AuthService in the application. AuthService is the class that implements the IAuthService interface. This line is used to add the AuthService to the dependency injection container. In this way, we can use the AuthService in the controllers and other classes by injecting it in the constructor.
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
