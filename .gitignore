@@ -5,7 +5,11 @@
 /.vs
 /Mango.Services.CouponAPI/bin/Debug/net8.0
 /Mango.Services.CouponAPI/Migrations
+/Mango.Services.CouponAPI/obj
 /Mango.Services.CouponAPI/obj/Debug/net8.0/refint/Mango.Services.CouponAPI.dll
 /Mango.Services.CouponAPI/obj/Debug/net8.0/ref/Mango.Services.CouponAPI.dll
 /Mango.Web/bin/Debug/net8.0
 /Mango.Web/obj
+/Mango.Services.AuthAPI/obj
+/Mango.Service.AuthAPI/bin/Debug/net8.0
+/Mango.Service.AuthAPI/obj
